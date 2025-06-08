@@ -1,0 +1,8 @@
+bower_components
+node_modules
+*.log
+.DS_Store
+bundle.js
+
+#  3D models
+models/
