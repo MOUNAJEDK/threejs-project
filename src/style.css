@@ -1,0 +1,344 @@
+body {
+  margin: 0;
+  overflow: hidden; /* Hide scrollbars */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+canvas {
+  display: block;
+}
+
+/* === Custom GUI Styles === */
+#custom-gui {
+  width: 340px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(100, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 13px;
+  color: #e2e8f0;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.gui-section {
+  border-bottom: 1px solid rgba(100, 255, 255, 0.1);
+}
+
+.gui-section:last-child {
+  border-bottom: none;
+}
+
+.gui-section .gui-header {
+  background: transparent;
+  color: #40e0ff;
+  text-shadow: 0 0 10px rgba(100, 255, 255, 0.3);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gui-section .gui-header:hover {
+  background: rgba(100, 255, 255, 0.1);
+}
+
+.gui-section .gui-content {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  display: none; /* Hidden by default */
+}
+
+.gui-section.open .gui-content {
+  display: block;
+}
+
+.gui-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 1px solid rgba(100, 255, 255, 0.1);
+}
+
+.gui-item:last-child {
+  border-bottom: none;
+}
+
+.gui-item label {
+  font-weight: 500;
+  width: 40%;
+}
+
+.gui-item input[type="range"],
+.gui-item select,
+.gui-item input[type="color"],
+.gui-item input[type="checkbox"],
+.gui-item button {
+  width: 55%;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  height: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #40e0ff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+select, input[type="color"] {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: #f1f5f9;
+  padding: 4px 8px;
+  height: 28px;
+}
+
+button {
+  background: linear-gradient(145deg, #374151, #4b5563);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  color: #f1f5f9;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+button:hover {
+  background: linear-gradient(145deg, #4b5563, #6b7280);
+}
+
+/* Loading Screen */
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-content h2 {
+  margin-bottom: 20px;
+  font-size: 2em;
+  color: #40e0ff;
+  text-shadow: 0 0 20px rgba(100, 255, 255, 0.5);
+}
+
+.loading-content p {
+  margin-top: 20px;
+  opacity: 0.7;
+  font-size: 1.1em;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(100, 255, 255, 0.3);
+  border-top: 3px solid #40e0ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(100, 255, 255, 0.3);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Controls Help Overlay */
+#controls-help {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(100, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  z-index: 1001;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  min-width: 300px;
+  transition: all 0.3s ease;
+}
+
+#controls-help.hidden {
+  display: none;
+}
+
+.help-content h3 {
+  margin-top: 0;
+  color: #40e0ff;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+  text-shadow: 0 0 10px rgba(100, 255, 255, 0.3);
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.controls-grid div {
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(100, 255, 255, 0.1);
+}
+
+.controls-grid strong {
+  color: #40e0ff;
+  min-width: 60px;
+  display: inline-block;
+}
+
+.help-content p {
+  text-align: center;
+  margin-bottom: 0;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Help Info Component */
+#help-info {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid rgba(100, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+  animation: helpPulse 2s ease-in-out infinite;
+}
+
+#help-info:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(100, 255, 255, 0.2);
+}
+
+#help-info strong {
+  color: #40e0ff;
+  font-weight: 600;
+}
+
+@keyframes helpPulse {
+  0%, 100% {
+    opacity: 0.8;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 4px 15px rgba(100, 255, 255, 0.1);
+  }
+}
+
+/* Planet Info Tooltip */
+#planet-tooltip {
+  position: fixed;
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(100, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 15px 20px;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  z-index: 1002;
+  max-width: 250px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -100%);
+}
+
+#planet-tooltip.hidden {
+  display: none;
+}
+
+#planet-tooltip h4 {
+  margin: 0 0 8px 0;
+  color: #40e0ff;
+  font-size: 1.2em;
+  text-shadow: 0 0 10px rgba(100, 255, 255, 0.3);
+}
+
+#planet-tooltip p {
+  margin: 0 0 8px 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+#planet-distance {
+  font-size: 0.8em;
+  color: #40e0ff;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+/* GUI Container positioning */
+#shuttle-gui-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+/* Professional animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

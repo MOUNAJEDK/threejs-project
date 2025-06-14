@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js GTR Scene</title>
+    <link rel="stylesheet" href="./src/style.css">
+  </head>
+  <body>
+    <div id="shuttle-gui-container">
+      <div id="custom-gui">
+        <div class="gui-section">
+          <div class="gui-header">FLIGHT CONTROLS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="thrust">Thrust Power</label>
+              <input type="range" id="thrust" min="0.001" max="0.01" step="0.0005">
+            </div>
+            <div class="gui-item">
+              <label for="max-velocity">Max Velocity</label>
+              <input type="range" id="max-velocity" min="0.1" max="1.0" step="0.05">
+            </div>
+            <div class="gui-item">
+              <label for="rotation-speed">Rotation Speed</label>
+              <input type="range" id="rotation-speed" min="0.001" max="0.01" step="0.0005">
+            </div>
+            <div class="gui-item">
+              <label for="roll-speed">Roll Speed</label>
+              <input type="range" id="roll-speed" min="0.0005" max="0.005" step="0.0001">
+            </div>
+            <div class="gui-item">
+              <button id="reset-shuttle">RESET POSITION</button>
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">CAMERA CONTROLS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="camera-mode">Camera Mode</label>
+              <select id="camera-mode">
+                <option value="orbit">Orbit</option>
+                <option value="chase">Chase</option>
+              </select>
+            </div>
+            <div class="gui-item">
+              <label for="chase-distance">Chase Distance</label>
+              <input type="range" id="chase-distance" min="10" max="100" step="5">
+            </div>
+            <div class="gui-item">
+              <label for="chase-height">Chase Height</label>
+              <input type="range" id="chase-height" min="0" max="50" step="2">
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">WEAPONS & EFFECTS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="laser-color">Laser Color</label>
+              <input type="color" id="laser-color">
+            </div>
+            <div class="gui-item">
+              <label for="laser-speed">Laser Speed</label>
+              <input type="range" id="laser-speed" min="0.5" max="5.0" step="0.1">
+            </div>
+            <div class="gui-item">
+              <label for="fire-rate">Fire Rate (ms)</label>
+              <input type="range" id="fire-rate" min="100" max="1000" step="50">
+            </div>
+            <div class="gui-item">
+              <button id="fire-laser">FIRE LASER</button>
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">THRUSTER EFFECTS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="thruster-color">Thruster Color</label>
+              <input type="color" id="thruster-color">
+            </div>
+            <div class="gui-item">
+              <label for="particle-count">Particle Count</label>
+              <input type="range" id="particle-count" min="50" max="200" step="10">
+            </div>
+            <div class="gui-item">
+              <label for="particle-life">Particle Life</label>
+              <input type="range" id="particle-life" min="0.5" max="5.0" step="0.1">
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">LIGHTING</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="ambient-intensity">Ambient Light</label>
+              <input type="range" id="ambient-intensity" min="0" max="1" step="0.05">
+            </div>
+            <div class="gui-item">
+              <label for="directional-intensity">Sun Light</label>
+              <input type="range" id="directional-intensity" min="0" max="5" step="0.1">
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">VISUAL EFFECTS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="toggle-wireframe">Wireframe Mode</label>
+              <input type="checkbox" id="toggle-wireframe">
+            </div>
+            <div class="gui-item">
+              <label for="bloom-strength">Bloom Strength</label>
+              <input type="range" id="bloom-strength" min="0" max="3" step="0.1">
+            </div>
+            <div class="gui-item">
+              <label for="bloom-radius">Bloom Radius</label>
+              <input type="range" id="bloom-radius" min="0" max="1" step="0.01">
+            </div>
+            <div class="gui-item">
+              <label for="bloom-threshold">Bloom Threshold</label>
+              <input type="range" id="bloom-threshold" min="0" max="1" step="0.01">
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">AUDIO CONTROLS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="ambient-volume">Ambient Volume</label>
+              <input type="range" id="ambient-volume" min="0" max="1" step="0.05">
+            </div>
+            <div class="gui-item">
+              <label for="engine-volume">Engine Volume</label>
+              <input type="range" id="engine-volume" min="0" max="1" step="0.05">
+            </div>
+            <div class="gui-item">
+              <label for="laser-volume">Laser Volume</label>
+              <input type="range" id="laser-volume" min="0" max="1" step="0.05">
+            </div>
+            <div class="gui-item">
+              <button id="toggle-ambient">TOGGLE AMBIENT SOUND</button>
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">TIME CONTROLS</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label for="time-preset">Speed Preset</label>
+              <select id="time-preset">
+                <option>Pause</option>
+                <option>Slow</option>
+                <option selected>Normal</option>
+                <option>Fast</option>
+                <option>Very Fast</option>
+              </select>
+            </div>
+            <div class="gui-item">
+              <label for="time-speed">Custom Speed</label>
+              <input type="range" id="time-speed" min="0" max="5" step="0.1">
+            </div>
+          </div>
+        </div>
+        <div class="gui-section">
+          <div class="gui-header">PERFORMANCE</div>
+          <div class="gui-content">
+            <div class="gui-item">
+              <label>FPS</label>
+              <span id="fps-counter">60</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+      <div class="loading-content">
+        <h2>Loading Solar System...</h2>
+        <div class="spinner"></div>
+        <p>Initializing planets and spacecraft</p>
+      </div>
+    </div>
+    
+    <!-- Controls Help Overlay -->
+    <div id="controls-help" class="hidden">
+      <div class="help-content">
+        <h3>Controls</h3>
+        <div class="controls-grid">
+          <div><strong>WASD</strong> - Rotate shuttle</div>
+          <div><strong>Q/E</strong> - Roll left/right</div>
+          <div><strong>Shift</strong> - Thrust forward</div>
+          <div><strong>Space</strong> - Ascend</div>
+          <div><strong>Ctrl</strong> - Descend</div>
+          <div><strong>F</strong> - Fire lasers</div>
+          <div><strong>H</strong> - Toggle this help</div>
+          <div><strong>Mouse</strong> - Orbit camera</div>
+          <div><strong>Click Planet</strong> - Focus & follow camera</div>
+          <div><strong>Escape</strong> - Exit focus mode</div>
+          <div><strong>M</strong> - Toggle ambient sound</div>
+        </div>
+        <p>Press <strong>H</strong> to close</p>
+      </div>
+    </div>
+    
+    <!-- Help Info Component -->
+    <div id="help-info">
+      Press <strong>H</strong> for controls
+    </div>
+    
+    <!-- Planet Info Tooltip -->
+    <div id="planet-tooltip" class="hidden">
+      <h4 id="planet-name"></h4>
+      <p id="planet-info"></p>
+      <div id="planet-distance"></div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
