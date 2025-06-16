@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  overflow: hidden; /* Hide scrollbars */
+  overflow: hidden;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
 }
@@ -9,7 +9,6 @@ canvas {
   display: block;
 }
 
-/* === Custom GUI Styles === */
 #custom-gui {
   width: 340px;
   max-height: calc(100vh - 40px);
@@ -56,7 +55,7 @@ canvas {
 .gui-section .gui-content {
   padding: 8px;
   background: rgba(0, 0, 0, 0.15);
-  display: none; /* Hidden by default */
+  display: none;
 }
 
 .gui-section.open .gui-content {
@@ -132,7 +131,6 @@ button:hover {
   background: linear-gradient(145deg, #4b5563, #6b7280);
 }
 
-/* Loading Screen */
 #loading-screen {
   position: fixed;
   top: 0;
@@ -181,7 +179,6 @@ button:hover {
   100% { transform: rotate(360deg); }
 }
 
-/* Controls Help Overlay */
 #controls-help {
   position: fixed;
   top: 50%;
@@ -238,7 +235,6 @@ button:hover {
   font-style: italic;
 }
 
-/* Help Info Component */
 #help-info {
   position: fixed;
   bottom: 20px;
@@ -280,7 +276,6 @@ button:hover {
   }
 }
 
-/* Planet Info Tooltip */
 #planet-tooltip {
   position: fixed;
   background: rgba(15, 15, 25, 0.95);
@@ -323,7 +318,6 @@ button:hover {
   opacity: 0.8;
 }
 
-/* GUI Container positioning */
 #shuttle-gui-container {
   position: fixed;
   top: 20px;
@@ -331,7 +325,6 @@ button:hover {
   z-index: 999;
 }
 
-/* Professional animations */
 @keyframes slideInRight {
   from {
     transform: translateX(100%);

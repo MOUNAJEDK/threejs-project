@@ -2,9 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Three.js GTR Scene</title>
+    <title>Three.js Application - Space Shuttle Simulation</title>
     <link rel="stylesheet" href="./src/style.css">
   </head>
   <body>
@@ -175,7 +177,6 @@
         </div>
       </div>
     </div>
-    <!-- Loading Screen -->
     <div id="loading-screen">
       <div class="loading-content">
         <h2>Loading Solar System...</h2>
@@ -184,7 +185,6 @@
       </div>
     </div>
     
-    <!-- Controls Help Overlay -->
     <div id="controls-help" class="hidden">
       <div class="help-content">
         <h3>Controls</h3>
@@ -205,12 +205,10 @@
       </div>
     </div>
     
-    <!-- Help Info Component -->
     <div id="help-info">
       Press <strong>H</strong> for controls
     </div>
     
-    <!-- Planet Info Tooltip -->
     <div id="planet-tooltip" class="hidden">
       <h4 id="planet-name"></h4>
       <p id="planet-info"></p>
