@@ -38,7 +38,7 @@ src/
 
 Fișierele de mari dimensiuni din directorul `public/` pot fi descărcate de la:
 
-**GitHub Repository:** [Link către repository-ul proiectului]
+**GitHub Repository:** [text](https://github.com/MOUNAJEDK/threejs-project)
 
 ### Fișiere necesare:
 
