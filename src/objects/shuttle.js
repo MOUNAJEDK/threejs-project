@@ -38,6 +38,14 @@ export class Shuttle {
         this.scene.add(this.model);
         updateLoadingProgress();
         console.log("Shuttle model loaded successfully.");
+        
+        if (window.APP_STATE) {
+          window.APP_STATE.shuttleModel = this.model;
+          
+          if (window.initializeGUI && typeof window.initializeGUI === 'function') {
+            window.initializeGUI();
+          }
+        }
       },
       undefined,
       (error) => {
