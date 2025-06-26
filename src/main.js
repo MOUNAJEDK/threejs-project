@@ -12,14 +12,18 @@ import { ControlsSystem } from './systems/controlsSystem.js';
 import { ParticleSystem } from './systems/particleSystem.js';
 import { SolarSystem } from './objects/solarSystem.js';
 import { Shuttle } from './objects/shuttle.js';
+import { EnemyShuttle } from './objects/enemyShuttle.js';
 import { GUI } from './ui/gui.js';
 import { Tooltips } from './ui/tooltips.js';
 
 window.APP_STATE = {
   shuttleModel: null,
+  enemyShuttleModels: [],
   planets: [],
   timeSpeed: 1.0,
 };
+
+window.DEBUG_ENEMY_ONCE = true;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -93,11 +97,21 @@ orbitControls.enableDamping = true;
 orbitControls.target.set(200, 10, -300);
 
 const audioSystem = new AudioSystem();
+window.audioSystem = audioSystem;
 const cameraSystem = new CameraSystem(camera, orbitControls);
 const controlsSystem = new ControlsSystem(cameraSystem, audioSystem);
 const particleSystem = new ParticleSystem(scene, textureLoader, audioSystem);
+window.particleSystem = particleSystem;
 const solarSystem = new SolarSystem(scene, textureLoader, particleSystem);
 const shuttle = new Shuttle(scene, particleSystem);
+
+const enemyShuttles = [];
+CONFIG.enemyModel.spawnPositions.forEach((position, index) => {
+  const enemyShuttle = new EnemyShuttle(scene, position);
+  enemyShuttles.push(enemyShuttle);
+});
+window.enemyShuttles = enemyShuttles;
+
 const tooltips = new Tooltips();
 
 window.APP_STATE.planets = solarSystem.getPlanets();
@@ -106,9 +120,11 @@ controlsSystem.showTooltip = (planet, x, y) => tooltips.show(planet, x, y, windo
 controlsSystem.hideTooltip = () => tooltips.hide();
 
 let gui;
-shuttle.loader.manager.onLoad = () => {
-  window.APP_STATE.shuttleModel = shuttle.getModel();
-  gui = new GUI(shuttle, cameraSystem, audioSystem, particleSystem, solarSystem, ambientLight, directionalLight, bloomPass);
+
+window.initializeGUI = () => {
+  if (!gui && window.APP_STATE.shuttleModel) {
+    gui = new GUI(shuttle, cameraSystem, audioSystem, particleSystem, solarSystem, ambientLight, directionalLight, bloomPass);
+  }
 };
 
 const clock = new THREE.Clock();
@@ -137,8 +153,28 @@ function animate() {
       }
     }
   }
+  
+  if (window.APP_STATE.enemyShuttleModel && window.DEBUG_ENEMY_ONCE) {
+    console.log("Enemy shuttle in animate loop:", window.APP_STATE.enemyShuttleModel.position.x, window.APP_STATE.enemyShuttleModel.position.y, window.APP_STATE.enemyShuttleModel.position.z);
+    console.log("Enemy shuttle visible:", window.APP_STATE.enemyShuttleModel.visible);
+    console.log("Enemy shuttle in scene:", scene.children.includes(window.APP_STATE.enemyShuttleModel));
+    console.log("Camera position:", camera.position.x, camera.position.y, camera.position.z);
+    console.log("Distance from camera to enemy:", camera.position.distanceTo(window.APP_STATE.enemyShuttleModel.position));
+    window.DEBUG_ENEMY_ONCE = false;
+  }
 
   solarSystem.update();
+
+  if (window.enemyShuttles) {
+    window.enemyShuttles.forEach(enemyShuttle => {
+      if (!enemyShuttle.getIsDestroyed()) {
+        enemyShuttle.update(deltaTime);
+        if (enemyShuttle.getModel() && !window.APP_STATE.enemyShuttleModels.includes(enemyShuttle.getModel())) {
+          window.APP_STATE.enemyShuttleModels.push(enemyShuttle.getModel());
+        }
+      }
+    });
+  }
 
   if (cameraSystem.state.mode === "orbit" && !cameraSystem.state.transitioning) {
     orbitControls.update();

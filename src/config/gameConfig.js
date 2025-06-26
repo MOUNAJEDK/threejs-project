@@ -27,9 +27,11 @@ export const CONFIG = {
     engineStartPath: "/sounds/shuttle-engine-start.mp3",
     engineStopPath: "/sounds/shuttle-engine-stop.mp3",
     laserShootPath: "/sounds/laser-shoot.mp3",
+    explosionPath: "/sounds/enemy-shuttle-explosion.mp3",
     ambientVolume: 0.3,
     engineVolume: 0.4,
     laserVolume: 0.6,
+    explosionVolume: 1.0,
     fadeInDuration: 2000,
     engineFadeDuration: 500,
   },
@@ -37,6 +39,24 @@ export const CONFIG = {
     path: "/models/star-wars-shuttle.glb",
     scale: 0.0025,
     position: { x: 200, y: 10, z: -300 },
+  },
+  enemyModel: {
+    path: "/models/enemy-shuttle.glb",
+    scale: 9.0,
+    spawnPositions: [
+      { x: 300, y: 20, z: -200 },
+      { x: 100, y: 25, z: -450 },
+      { x: 400, y: 15, z: -350 },
+      { x: 150, y: 30, z: -150 },
+      { x: 350, y: 18, z: -500 }
+    ],
+    rotation: { x: 0, y: Math.PI, z: 0 },
+  },
+  enemyMovement: {
+    speed: 15,
+    changeInterval: 3000,
+    maxDistance: 40,
+    smoothing: 0.05,
   },
   flight: {
     thrust: 0.003,
@@ -99,4 +119,4 @@ export const CONFIG = {
   ]
 };
 
-export const ASSET_COUNT = 19;
+export const ASSET_COUNT = 21;

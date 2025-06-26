@@ -28,6 +28,7 @@ export class GUI {
 
     this.setupFlightControls();
     this.setupCameraControls();
+    this.setupEnemyShuttle();
     this.setupWeapons();
     this.setupThrusterEffects();
     this.setupLighting();
@@ -53,6 +54,65 @@ export class GUI {
     });
     document.getElementById('chase-distance').addEventListener('input', e => CONFIG.camera.chaseDistance = parseInt(e.target.value));
     document.getElementById('chase-height').addEventListener('input', e => CONFIG.camera.chaseHeight = parseInt(e.target.value));
+  }
+
+  setupEnemyShuttle() {
+    document.getElementById('enemy-x').addEventListener('input', e => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        window.APP_STATE.enemyShuttleModel.position.x = parseInt(e.target.value);
+      }
+    });
+    document.getElementById('enemy-y').addEventListener('input', e => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        window.APP_STATE.enemyShuttleModel.position.y = parseInt(e.target.value);
+      }
+    });
+    document.getElementById('enemy-z').addEventListener('input', e => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        window.APP_STATE.enemyShuttleModel.position.z = parseInt(e.target.value);
+      }
+    });
+    document.getElementById('enemy-scale').addEventListener('input', e => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        const scale = parseFloat(e.target.value);
+        window.APP_STATE.enemyShuttleModel.scale.setScalar(scale);
+      }
+    });
+    document.getElementById('enemy-rotation-y').addEventListener('input', e => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        window.APP_STATE.enemyShuttleModel.rotation.y = parseFloat(e.target.value);
+      }
+    });
+    document.getElementById('enemy-speed').addEventListener('input', e => {
+      CONFIG.enemyMovement.speed = parseFloat(e.target.value);
+    });
+    document.getElementById('enemy-range').addEventListener('input', e => {
+      CONFIG.enemyMovement.maxDistance = parseInt(e.target.value);
+    });
+    document.getElementById('show-hitbox').addEventListener('change', e => {
+      if (window.enemyShuttles && window.enemyShuttles.length > 0) {
+        window.enemyShuttles.forEach(enemyShuttle => {
+          if (enemyShuttle.getHitbox()) {
+            enemyShuttle.getHitbox().visible = e.target.checked;
+          }
+        });
+        console.log("Hitbox visibility set to:", e.target.checked, "for all enemy shuttles");
+      } else {
+        console.log("Enemy shuttles not found");
+      }
+    });
+    document.getElementById('reset-enemy').addEventListener('click', () => {
+      if (window.APP_STATE.enemyShuttleModel) {
+        window.APP_STATE.enemyShuttleModel.position.set(CONFIG.enemyModel.position.x, CONFIG.enemyModel.position.y, CONFIG.enemyModel.position.z);
+        window.APP_STATE.enemyShuttleModel.rotation.set(CONFIG.enemyModel.rotation.x, CONFIG.enemyModel.rotation.y, CONFIG.enemyModel.rotation.z);
+        window.APP_STATE.enemyShuttleModel.scale.setScalar(CONFIG.enemyModel.scale);
+        document.getElementById('enemy-x').value = CONFIG.enemyModel.position.x;
+        document.getElementById('enemy-y').value = CONFIG.enemyModel.position.y;
+        document.getElementById('enemy-z').value = CONFIG.enemyModel.position.z;
+        document.getElementById('enemy-scale').value = CONFIG.enemyModel.scale;
+        document.getElementById('enemy-rotation-y').value = CONFIG.enemyModel.rotation.y;
+      }
+    });
   }
 
   setupWeapons() {
@@ -162,5 +222,12 @@ export class GUI {
     document.getElementById('engine-volume').value = CONFIG.audio.engineVolume;
     document.getElementById('laser-volume').value = CONFIG.audio.laserVolume;
     document.getElementById('time-speed').value = this.solarSystem.timeSpeed;
+    document.getElementById('enemy-x').value = CONFIG.enemyModel.position.x;
+    document.getElementById('enemy-y').value = CONFIG.enemyModel.position.y;
+    document.getElementById('enemy-z').value = CONFIG.enemyModel.position.z;
+    document.getElementById('enemy-scale').value = CONFIG.enemyModel.scale;
+    document.getElementById('enemy-rotation-y').value = CONFIG.enemyModel.rotation.y;
+    document.getElementById('enemy-speed').value = CONFIG.enemyMovement.speed;
+    document.getElementById('enemy-range').value = CONFIG.enemyMovement.maxDistance;
   }
 }

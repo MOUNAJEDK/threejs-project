@@ -7,6 +7,7 @@ export class AudioSystem {
     this.engineStartSound = null;
     this.engineStopSound = null;
     this.laserShootSound = null;
+    this.explosionSound = null;
     this.isAmbientPlaying = false;
     this.isEngineRunning = false;
     this.userInteracted = false;
@@ -35,6 +36,11 @@ export class AudioSystem {
     this.laserShootSound.loop = false;
     this.laserShootSound.volume = CONFIG.audio.laserVolume;
     this.laserShootSound.preload = 'auto';
+    
+    this.explosionSound = new Audio(CONFIG.audio.explosionPath);
+    this.explosionSound.loop = false;
+    this.explosionSound.volume = CONFIG.audio.explosionVolume;
+    this.explosionSound.preload = 'auto';
     
     this.ambientSound.addEventListener('canplaythrough', () => {
       console.log('Ambient sound loaded and ready to play');
@@ -73,6 +79,16 @@ export class AudioSystem {
     
     this.laserShootSound.addEventListener('error', (e) => {
       console.warn('Failed to load laser shoot sound:', e);
+      updateLoadingProgress();
+    });
+    
+    this.explosionSound.addEventListener('canplaythrough', () => {
+      console.log('Explosion sound loaded and ready to play');
+      updateLoadingProgress();
+    });
+    
+    this.explosionSound.addEventListener('error', (e) => {
+      console.warn('Failed to load explosion sound:', e);
       updateLoadingProgress();
     });
   }
@@ -256,5 +272,31 @@ export class AudioSystem {
     };
     
     animate();
+  }
+
+  playExplosion() {
+    if (!this.explosionSound) return;
+    if (!this.userInteracted) return;
+    
+    try {
+      this.explosionSound.currentTime = 0;
+      const playPromise = this.explosionSound.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log('Explosion sound played successfully');
+        }).catch((error) => {
+          console.log('Explosion sound play failed:', error);
+        });
+      }
+    } catch (error) {
+      console.log('Explosion audio play failed:', error);
+    }
+  }
+
+  setExplosionVolume(volume) {
+    if (this.explosionSound) {
+      this.explosionSound.volume = volume;
+    }
   }
 }

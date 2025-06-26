@@ -203,7 +203,24 @@ export class ParticleSystem {
       laser.position.add(laser.userData.velocity);
       laser.userData.distanceTraveled += distanceThisFrame;
 
+      let shouldRemove = false;
+
+      if (window.enemyShuttles) {
+        for (let enemyShuttle of window.enemyShuttles) {
+          if (!enemyShuttle.getIsDestroyed() && enemyShuttle.checkCollision(laser.position, 2)) {
+            console.log("Laser hit enemy shuttle!");
+            enemyShuttle.destroy();
+            shouldRemove = true;
+            break;
+          }
+        }
+      }
+
       if (laser.userData.distanceTraveled > laserConfig.maxLength) {
+        shouldRemove = true;
+      }
+
+      if (shouldRemove) {
         this.scene.remove(laser);
         laser.geometry.dispose();
         laser.material.dispose();
@@ -260,6 +277,125 @@ export class ParticleSystem {
     this.scene.add(heatParticles);
     
     return heatParticles;
+  }
+
+  createExplosion(position, scale = 1) {
+    const explosionParticles = [];
+    const particleCount = 50;
+    
+    const glowTexture = this.textureLoader.load(
+      '/textures/glow.png',
+      () => updateLoadingProgress(),
+      undefined,
+      (error) => {
+        console.warn("Failed to load explosion glow texture:", error);
+        updateLoadingProgress();
+      }
+    );
+
+    for (let i = 0; i < particleCount; i++) {
+      const material = new THREE.SpriteMaterial({
+        map: glowTexture,
+        color: new THREE.Color().setHSL(Math.random() * 0.1, 1, 0.5 + Math.random() * 0.5),
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        opacity: 1
+      });
+      
+      const particle = new THREE.Sprite(material);
+      particle.position.copy(position);
+      
+      const velocity = new THREE.Vector3(
+        (Math.random() - 0.5) * 20 * scale,
+        (Math.random() - 0.5) * 20 * scale,
+        (Math.random() - 0.5) * 20 * scale
+      );
+      
+      particle.userData = {
+        velocity: velocity,
+        life: 1.5 + Math.random() * 0.8,
+        maxLife: 1.5 + Math.random() * 0.8,
+        initialScale: (0.5 + Math.random() * 1.5) * scale,
+        finalScale: (3 + Math.random() * 3) * scale
+      };
+      
+      particle.scale.setScalar(particle.userData.initialScale);
+      
+      this.scene.add(particle);
+      explosionParticles.push(particle);
+    }
+
+    const shockwaveGeometry = new THREE.RingGeometry(0.1, 1, 32);
+    const shockwaveMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffaa00,
+      transparent: true,
+      opacity: 0.8,
+      side: THREE.DoubleSide
+    });
+    const shockwave = new THREE.Mesh(shockwaveGeometry, shockwaveMaterial);
+    shockwave.position.copy(position);
+    shockwave.rotation.x = Math.PI / 2;
+    shockwave.userData = {
+      life: 1.2,
+      maxLife: 1.2,
+      maxScale: 15 * scale
+    };
+    this.scene.add(shockwave);
+    explosionParticles.push(shockwave);
+
+    requestAnimationFrame(() => {
+      this.updateExplosion(explosionParticles);
+    });
+    
+    console.log("Explosion created at position:", position);
+  }
+
+  updateExplosion(explosionParticles) {
+    const deltaTime = 0.016;
+    
+    for (let i = explosionParticles.length - 1; i >= 0; i--) {
+      const particle = explosionParticles[i];
+      
+      if (particle.userData.life !== undefined) {
+        particle.userData.life -= deltaTime * 1.2;
+        
+        if (particle.userData.life <= 0) {
+          this.scene.remove(particle);
+          if (particle.material) particle.material.dispose();
+          if (particle.geometry) particle.geometry.dispose();
+          explosionParticles.splice(i, 1);
+          continue;
+        }
+        
+        const lifePercent = particle.userData.life / particle.userData.maxLife;
+        
+        if (particle.type === 'Sprite') {
+          if (particle.userData.velocity) {
+            particle.position.add(particle.userData.velocity.clone().multiplyScalar(deltaTime));
+            particle.userData.velocity.multiplyScalar(0.98);
+          }
+          
+          const scale = THREE.MathUtils.lerp(
+            particle.userData.finalScale,
+            particle.userData.initialScale,
+            lifePercent
+          );
+          particle.scale.setScalar(scale);
+          particle.material.opacity = lifePercent;
+        } else if (particle.type === 'Mesh') {
+          const scale = (1 - lifePercent) * particle.userData.maxScale;
+          particle.scale.setScalar(scale);
+          particle.material.opacity = lifePercent * 0.8;
+          particle.rotation.z += deltaTime * 2;
+        }
+      }
+    }
+    
+    if (explosionParticles.length > 0) {
+      requestAnimationFrame(() => {
+        this.updateExplosion(explosionParticles);
+      });
+    }
   }
 
   setLaserHardpoints(hardpoints) {
