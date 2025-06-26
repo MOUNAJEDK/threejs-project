@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/favicon.png" alt="Space Adventure" width="64" height="64">
+  <img src="public/favicon.png" alt="Space Adventure" width="128" height="128">
   
   # 🚀 Aventură Spațială - Explorarea Sistemului Solar
 </div>
